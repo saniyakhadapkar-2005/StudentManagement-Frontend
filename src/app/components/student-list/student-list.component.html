@@ -1,0 +1,292 @@
+<div class="campus-page">
+  <nav class="top-nav">
+    <div class="nav-brand">
+      <div class="crest">SC</div>
+      <div>
+        <span class="college-name">{{ collegeName }}</span>
+        <span class="tagline">📍 Malad, Mumbai · Excellence · Innovation</span>
+      </div>
+    </div>
+    <div class="nav-meta">
+      <span class="badge">Academic Year {{ academicYear }}</span>
+      <span class="badge live">Campus Portal Live</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <img class="hero-photo" [src]="collegePhoto" alt="Saniya College Campus, Malad Mumbai" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Student Affairs Department</p>
+      <h1>College Student Management Portal</h1>
+      <p class="hero-desc">
+        Manage enrollments, academic records, attendance, and grades — all in one modern campus dashboard.
+      </p>
+      <div class="hero-location">
+        <span>📍 {{ collegeAddress }}</span>
+        <span>📞 {{ collegePhone }}</span>
+        <span>✉️ {{ collegeEmail }}</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="toast success" *ngIf="successMessage">{{ successMessage }}</div>
+    <div class="toast error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <section class="campus-info">
+      <div class="campus-photo-wrap">
+        <img [src]="collegePhoto" alt="College campus Malad Mumbai" />
+        <span class="campus-badge">Est. 1998 · Malad Campus</span>
+      </div>
+      <div class="campus-details">
+        <h2>Our Campus — Malad, Mumbai</h2>
+        <p>
+          Saniya College of Technology is located in the heart of Malad, Mumbai — a vibrant hub
+          for education with modern labs, a digital library, sports complex, and hostel facilities.
+        </p>
+        <ul class="campus-features">
+          <li>📍 Address: {{ collegeAddress }}</li>
+          <li>🚌 Near Malad Railway Station (West)</li>
+          <li>🏫 15+ Departments &amp; Research Labs</li>
+          <li>🌳 5-acre Green Campus with Wi-Fi</li>
+          <li>🏠 Hostel available for outstation students</li>
+        </ul>
+        <a class="map-link" href="https://maps.google.com/?q=Malad+West+Mumbai" target="_blank" rel="noopener">
+          View on Google Maps →
+        </a>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <span class="stat-icon">🎓</span>
+        <div>
+          <p class="stat-label">Total Enrolled</p>
+          <h3>{{ totalStudents }}</h3>
+        </div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">📊</span>
+        <div>
+          <p class="stat-label">Average Marks</p>
+          <h3>{{ averageMarks }}</h3>
+        </div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">📅</span>
+        <div>
+          <p class="stat-label">Avg Attendance</p>
+          <h3>{{ averageAttendance }}</h3>
+        </div>
+      </article>
+      <article class="stat-card gold">
+        <span class="stat-icon">🏆</span>
+        <div>
+          <p class="stat-label">Honor Students</p>
+          <h3>{{ honorStudents }}</h3>
+        </div>
+      </article>
+      <article class="stat-card location">
+        <span class="stat-icon">📍</span>
+        <div>
+          <p class="stat-label">Malad Residents</p>
+          <h3>{{ maladStudents }}</h3>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" id="enrollment-form">
+      <div class="panel-head">
+        <div>
+          <h2>{{ editingId ? 'Update Student Record' : 'New Student Enrollment' }}</h2>
+          <p>Fill in personal, contact, and academic details to register a student.</p>
+        </div>
+        <div class="panel-actions">
+          <button type="button" class="btn btn-ghost" (click)="fillRandomStudent()">🎲 Random Fill</button>
+          <button type="button" class="btn btn-ghost" *ngIf="editingId" (click)="resetForm()">Cancel Edit</button>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="enroll-form">
+        <div class="form-section">
+          <h3>Personal Information</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Full Name *</label>
+              <input id="name" type="text" formControlName="name" placeholder="e.g. Aarav Sharma" />
+              <small *ngIf="isInvalid('name')">Enter a valid student name</small>
+            </div>
+            <div class="field">
+              <label for="age">Age *</label>
+              <input id="age" type="number" formControlName="age" placeholder="18–25" />
+              <small *ngIf="isInvalid('age')">Age must be between 16 and 30</small>
+            </div>
+            <div class="field">
+              <label for="course">Department / Course</label>
+              <select id="course" formControlName="course">
+                <option value="">Select a course</option>
+                <option *ngFor="let c of courses" [value]="c">{{ c }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Contact &amp; Address (Malad, Mumbai)</h3>
+          <div class="form-grid">
+            <div class="field full-width">
+              <label for="address">Residential Address *</label>
+              <input id="address" type="text" formControlName="address" placeholder="e.g. 12, SV Road, Malad West, Mumbai - 400064" />
+              <small *ngIf="isInvalid('address')">Enter a valid address in Malad, Mumbai</small>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" type="email" formControlName="email" placeholder="student@email.com" />
+              <small *ngIf="isInvalid('email')">Enter a valid email address</small>
+            </div>
+            <div class="field">
+              <label for="phone">Phone (10 digits)</label>
+              <input id="phone" type="text" formControlName="phone" placeholder="9876543210" maxlength="10" />
+              <small *ngIf="isInvalid('phone')">Enter a valid 10-digit phone number</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Academic Performance</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="marks">Marks (%)</label>
+              <input id="marks" type="number" formControlName="marks" placeholder="0 – 100" step="0.1" />
+              <small *ngIf="isInvalid('marks')">Marks must be 0–100</small>
+            </div>
+            <div class="field">
+              <label for="grade">Grade</label>
+              <select id="grade" formControlName="grade">
+                <option value="">Select grade</option>
+                <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="B+">B+</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="attendance">Attendance (%)</label>
+              <input id="attendance" type="number" formControlName="attendance" placeholder="0 – 100" step="0.1" />
+              <small *ngIf="isInvalid('attendance')">Attendance must be 0–100</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
+            {{ saving ? 'Saving...' : (editingId ? '✓ Update Record' : '✓ Enroll Student') }}
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Enrolled Students</h2>
+          <p>Search, filter, and manage the campus roster.</p>
+        </div>
+        <div class="panel-actions">
+          <button type="button" class="btn btn-secondary" (click)="seedDemoStudents()" [disabled]="seeding">
+            {{ seeding ? 'Adding...' : '+ Add Demo Students' }}
+          </button>
+          <button type="button" class="btn btn-ghost" (click)="loadStudents()">↻ Refresh</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <input class="search-input" type="text" [(ngModel)]="searchQuery" placeholder="🔍 Search by name, course, address, email..." />
+        <select class="filter-select" [(ngModel)]="courseFilter">
+          <option value="">All Courses</option>
+          <option *ngFor="let c of courses" [value]="c">{{ c }}</option>
+        </select>
+        <select class="filter-select" [(ngModel)]="sortBy">
+          <option value="name">Sort: Name</option>
+          <option value="marks">Sort: Marks (High)</option>
+          <option value="attendance">Sort: Attendance (High)</option>
+        </select>
+        <button type="button" class="btn btn-ghost" (click)="clearFilters()">Clear Filters</button>
+      </div>
+
+      <p class="result-count" *ngIf="!loading && students.length > 0">
+        Showing {{ filteredStudents.length }} of {{ totalStudents }} students
+      </p>
+
+      <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading campus roster...</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && students.length === 0">
+        <div class="empty-icon">🏫</div>
+        <h3>No students enrolled yet</h3>
+        <p>Use the enrollment form above or add demo students to get started.</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && students.length > 0 && filteredStudents.length === 0">
+        <div class="empty-icon">🔍</div>
+        <h3>No matching students</h3>
+        <p>Try adjusting your search or filters.</p>
+      </div>
+
+      <div class="student-grid" *ngIf="!loading && filteredStudents.length > 0">
+        <article class="student-card" *ngFor="let student of filteredStudents">
+          <div class="card-top">
+            <div class="avatar" [style.background]="'hsl(' + ((student.id || 0) * 47 % 360) + ', 55%, 42%)'">
+              {{ getInitials(student.name) }}
+            </div>
+            <div class="student-info">
+              <h3>{{ student.name }}</h3>
+              <p class="student-id">Student ID: {{ 1000 + (student.id || 0) }}</p>
+              <span class="course-tag">{{ student.course || 'Undeclared Major' }}</span>
+            </div>
+            <span class="grade-pill" [ngClass]="gradeClass(student.grade)">{{ student.grade || 'N/A' }}</span>
+          </div>
+
+          <div class="contact-block" *ngIf="student.address || student.email || student.phone">
+            <p class="address-line" *ngIf="student.address">📍 {{ student.address }}</p>
+            <p *ngIf="student.email">✉️ {{ student.email }}</p>
+            <p *ngIf="student.phone">📞 {{ student.phone }}</p>
+          </div>
+
+          <div class="card-metrics">
+            <div class="metric">
+              <span>Age</span>
+              <strong>{{ student.age }}</strong>
+            </div>
+            <div class="metric">
+              <span>Marks</span>
+              <strong>{{ student.marks ?? '—' }}%</strong>
+            </div>
+            <div class="metric wide">
+              <span>Attendance</span>
+              <div class="progress-wrap">
+                <div class="progress-bar" [ngClass]="attendanceLevel(student.attendance)"
+                     [style.width.%]="student.attendance || 0"></div>
+              </div>
+              <strong>{{ student.attendance ?? '—' }}%</strong>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button type="button" class="btn btn-edit" (click)="onEdit(student)">✎ Edit</button>
+            <button type="button" class="btn btn-delete" (click)="onDelete(student.id!, student.name)">✕ Remove</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="campus-footer">
+    <p>© {{ academicYear }} {{ collegeName }}</p>
+    <p>📍 {{ collegeAddress }} · {{ collegePhone }} · {{ collegeEmail }}</p>
+  </footer>
+</div>

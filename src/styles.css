@@ -1,0 +1,26 @@
+:root {
+  --navy: #0c1a3a;
+  --navy-light: #152a5c;
+  --maroon: #7f1d1d;
+  --gold: #d4a017;
+  --gold-light: #f5d76e;
+  --cream: #faf7f0;
+  --white: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --success: #059669;
+  --shadow: 0 12px 40px rgba(12, 26, 58, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', Segoe UI, sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
